@@ -5,7 +5,6 @@
 char    *ft_after(char c, t_forme list)
 {
     char    *tab;
-    char    *str;
     int     i;
     int     n;
 
@@ -23,22 +22,28 @@ char    *ft_after(char c, t_forme list)
         }
         tab[list.width] = '\0';
     }
+    else
+        return (NULL);
     return (tab);
 }
 
 char    *ft_before(char c, char signe, t_forme  list)
 {
-    char    *str;
     char    *tab;
     int     n;
     int     i;
+    char    s;
 
     i = 0;
     tab = (char *)malloc(sizeof(char) * list.width);
     n = list.width - 1;
+    if (signe == '+')
+        s = ' ';
+    else
+        s = '0';
     while (n > 0)
     {
-        tab[i] = '0';
+        tab[i] = signe;
         i++;
         n--;
     }
@@ -49,11 +54,8 @@ char    *ft_before(char c, char signe, t_forme  list)
 
 char *ft_type_char(va_list *ap, t_forme list)
 {
-    int n;
     char c;
-    int wid;
     char *tab;
-    char *str;
 
     c = va_arg(*ap, int);
     if (list.width > 1)
