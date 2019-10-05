@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <string.h>
 
 char	*ft_lltoa(long long nb)
 {
@@ -21,8 +22,7 @@ char	*ft_lltoa(long long nb)
 	j = num_dec(nb);
 	tab = (char *)malloc(sizeof(char) * (j + 1));
 	tab[j] = '\0';
-	if (nb == 0)
-		return ("0");
+	tab[0] = '0';
 	if (nb < 0)
 	{
 		tab[0] = '-';
@@ -30,20 +30,10 @@ char	*ft_lltoa(long long nb)
 	}
 	while (nb > 0)
 	{
-        tab[j - 1] = (((long long)(nb) % 10)) + 48;
+        tab[--j] = (((long long)(nb) % 10)) + 48;
 		nb /= 10;
-		j--;
 	}
     return (tab);
-}
-
-char	*ft_long(long	nb)
-{
-	char	*tab;
-
-	tab = (char *)malloc(sizeof(char) * 12);
-
-	return (tab);
 }
 
 long long		ft_len_num(long long d)
@@ -72,10 +62,9 @@ char	*ft_after_d(char *d, t_forme list)
 	int n;
 
 	i = 0;
-	if (ft_strsearch(list.size, '-') == 1)
+	if (list.width > ft_strlen(d))
 	{
-		tab = (char *)malloc(sizeof(char) * list.width);
-		tab = d;
+		tab = (char *)malloc(sizeof(char) * list.width + 1);
 		n = list.width - ft_strlen(d);
 		while (n > 0)
 		{
@@ -83,7 +72,8 @@ char	*ft_after_d(char *d, t_forme list)
 			tab[i] = ' ';
 			n--;
 		}
-		tab[list.width] = '\0';
+		tab[i] = '\0';
+		ft_strcpy(tab + i, d);
 	}
 	return (tab);
 }
@@ -93,15 +83,16 @@ char	*ft_type_int(va_list *ap, t_forme list)
 	long long     d;
 	char    *tab;
 
-	if (ft_strcmp(list.flags, "ll") == 0 || ft_strcmp(list.flags, "l") == 0) //long long and long in 64bit computar has the same range 
+	if (list.flags && (ft_strcmp(list.flags, "ll") == 0 || ft_strcmp(list.flags, "l") == 0)) //long long and long in 64bit computar has the same range 
 		d = (long)va_arg(*ap, long long);
-	else if (ft_strcmp(list.flags, "h") == 0)
+	else if (list.flags && ft_strcmp(list.flags, "h") == 0)
 		d = (short)va_arg(*ap, long long);
-	else if (ft_strcmp(list.flags, "hh") == 0)
+	else if (list.flags && ft_strcmp(list.flags, "hh") == 0)
 		d = (char)va_arg(*ap, int);
 	else
-		d = (long )va_arg(*ap, long long);
+		d = (long)va_arg(*ap, long long);
 	tab = ft_lltoa(d);
+    tab = ft_strncpy_white(list.tab, tab, list.size, list.width, list);
 	return (tab);
 }
 

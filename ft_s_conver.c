@@ -26,8 +26,8 @@ char    *ft_before_str(char *str, t_forme  list)
     int     j;
 
     i = 0;
-    tab = (char *)malloc(sizeof(char) * list.width);
-    n = list.width - 1;
+    n = list.width - ft_strlen(str);
+    tab = (char *)malloc(sizeof(char) * list.width + 1);
     while (n > 0)
     {
         tab[i] = ' ';
@@ -35,14 +35,28 @@ char    *ft_before_str(char *str, t_forme  list)
         n--;
     }
     j = 0;
-    while (str[j])
+    while (str[j] != '\0')
     {
-        tab[i] = str[i];
+        tab[i] = str[j];
         i++;
         j++;
     }
     tab[i] = '\0';
     return (tab);
+}
+
+int     ft_stricpy(char   **dst, const char *src)
+{
+    int i;
+
+    i = 0;
+    while (src[i])
+    {
+        (*dst)[i] = src[i];
+        i++;
+    }
+    (*dst)[i] = '\0';
+    return (i);
 }
 
 char    *ft_strncpy_white(char  *dst, char  *src, char  *signe, int n, t_forme list)
@@ -57,11 +71,7 @@ char    *ft_strncpy_white(char  *dst, char  *src, char  *signe, int n, t_forme l
     {
         if (ft_strsearch(signe, '-') == 1)
         {
-            while (src[i])
-            {
-                dst[i] = src[i];
-                i++;
-            }
+            i = ft_stricpy(&dst, src);
             while (n > 0)
             {
                 dst[i] = ' ';
@@ -71,19 +81,10 @@ char    *ft_strncpy_white(char  *dst, char  *src, char  *signe, int n, t_forme l
             dst[i] = '\0';
         }
         else
-        {
-            printf("hello\n");
-            ft_before_str(dst, list);
-        }
+            dst = ft_before_str(src, list);
     }
     else
-    {
-        while (src[i])
-        {
-            dst[i] = src[i];
-            i++;
-        }
-    }
+        dst = ft_strcpy(dst, src);
     return (dst);
 }
 
@@ -92,24 +93,11 @@ char *ft_type_string(va_list *ap, t_forme list)
     int n;
     char *str;
     char *tab;
-    char    *str2;
 
-    str = va_arg(*ap, char *);
-    str2 = ft_strdup(str);
-    if ((list.precision < (int)ft_strlen(str)) && list.precision >= 0)
-        str2[list.precision] = '\0';
-    n = ft_strlen(str2);
-    printf("%d\n", ft_strsearch(list.size, '-'));
-    if (ft_strsearch(list.size, '-') == 1)
-    {
-        printf("here2\n");
-        tab = ft_strncpy_white(list.tab, str2, list.size, list.width, list);
-    }
-    else
-    {
-        printf("here\n");
-        tab = str2;
-        printf("tab = %s\n",tab);
-    }
+    str = ft_strdup(va_arg(*ap, char *));
+    // if ((list.precision < (int)ft_strlen(str)) && list.precision >= 0)
+    //     str[list.precision] = '\0';
+    n = ft_strlen(str);
+    tab = ft_strncpy_white(list.tab, str, list.size, list.width, list);
     return (tab);
 }

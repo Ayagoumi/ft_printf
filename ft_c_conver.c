@@ -20,7 +20,7 @@ char    *ft_after(char c, t_forme list)
             tab[i] = ' ';
             n--;
         }
-        tab[list.width] = '\0';
+        tab[i] = '\0';
     }
     else
         return (NULL);
