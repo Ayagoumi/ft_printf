@@ -48,9 +48,9 @@ typedef struct      s_forme
 
 typedef struct  s_double
 {
-    char    *signe;
-    char    *exponant;
-    char    *mantissa;
+    long long    signe;
+    long long    exponant;
+    long long    mantissa;
 }               t_double;
 
 typedef union   s_fu
@@ -114,6 +114,8 @@ char		*ft_ftoa(long double n, t_forme list);
 char		*ft_type_float(va_list *ap, t_forme list);
 long double	floating_point_only(long double m);
 void		ft_putrevstr(char   *str);
+char        *add(char   *str1, char     *str2);
+char        *mult(char  *str1, char     *str2);
 
 //b
 char    *ft_type_binary(va_list *ap, t_forme list);
